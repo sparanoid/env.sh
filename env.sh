@@ -65,9 +65,9 @@ __info() {
 }
 
 __debug() {
-  ENV_VERBOSE="${ENV_VERBOSE:-"false"}"
-  if [ "$ENV_VERBOSE" == "true" ]; then
-    printf "ENV_VERBOSE: %s\n" "$1"
+  ENVSH_VERBOSE="${ENVSH_VERBOSE:-"false"}"
+  if [ "$ENVSH_VERBOSE" == "true" ]; then
+    printf "ENVSH_VERBOSE: %s\n" "$1"
   fi
 }
 
@@ -112,7 +112,7 @@ echo "$ENVSH_PREPEND" >> "$ENVSH_OUTPUT"
 [[ -f "$ENVSH_ENV" ]] || { echo "$ENVSH_ENV does not exist" ; exit 1 ;}
 
 # Process .env for runtime client use
-echo -e "\nParsing ${ENVSH_ENV}...\n"
+__info "$(__green "Parsing ${ENVSH_ENV}...\n")"
 while IFS= read -r line
 do
   # Check if this line is a valid environment variable and matches our prefix
@@ -150,13 +150,13 @@ for i in "${!matched_envs_arr[@]}"; do
 done
 
 # Print result
-echo -e "\nDone! Final result in ${ENVSH_OUTPUT}:\n"
-cat "$ENVSH_OUTPUT"
+__debug "$(__green "\nDone! Final result in ${ENVSH_OUTPUT}:\n")"
+__debug "`cat "$ENVSH_OUTPUT"`"
 
-echo -e "\nDone! Modified ${ENVSH_ENV}:\n"
-cat "$ENVSH_ENV"
+__debug "$(__green "\nDone! Modified ${ENVSH_ENV}:\n")"
+__debug "`cat "$ENVSH_ENV"`"
 
-echo -e "\nenv.sh done\n"
+__info "$(__green "\nenv.sh done\n")"
 
 # Accepting commands (for Docker)
 exec "$@"
