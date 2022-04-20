@@ -48,6 +48,31 @@ RUN chmod +x ./env.sh
 ENTRYPOINT ["./env.sh"]
 ```
 
+Create a `utils.js` to use it in runtime client:
+
+```js
+// Simplified from:
+// https://github.com/andrewmclagan/react-env/blob/master/packages/node/src/index.js
+export function env(key = '') {
+  if (!key.length) {
+    throw new Error('No env key provided');
+  }
+
+  if (isBrowser() && window.__env) {
+    return window.__env[key] === "''" ? '' : window.__env[key];
+  }
+
+  return process.env[key] === "''" ? '' : process.env[key];
+}
+```
+
+In `MyComponent.js`:
+
+```js
+import { env } from 'utils/utils';
+const API_BASE = env('CUSTOM_API_BASE');
+```
+
 ## License
 
  Apache-2.0
