@@ -69,10 +69,10 @@ export function env(key = '') {
 In `MyComponent.js`:
 
 ```js
-import { env } from 'utils/utils';
+import { env } from 'utils';
 const API_BASE = env('CUSTOM_API_BASE');
 ```
 
 ## License
 
- Apache-2.0
+Apache-2.0
