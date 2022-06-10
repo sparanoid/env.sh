@@ -101,7 +101,7 @@ touch "$ENVSH_OUTPUT"
 matched_envs=$(env | grep ${ENVSH_PREFIX})
 IFS=$'\n' read -r -d '' -a matched_envs_arr <<< "$matched_envs"
 echo -e "\nMatched inline env:\n"
-for matched_env in ${matched_envs_arr[@]}; do
+for matched_env in "${matched_envs_arr[@]}"; do
   echo $matched_env
 done
 
@@ -127,13 +127,13 @@ done < "$ENVSH_ENV"
 echo "$ENVSH_APPEND" >> "$ENVSH_OUTPUT"
 
 # Strip prefix if needed
-$ENVSH_PREFIX_STRIP && $ENVSH_SED -i'' -e "s/$ENVSH_PREFIX//g" "$ENVSH_OUTPUT"
+$ENVSH_PREFIX_STRIP && $ENVSH_SED -i'' -e "s~$ENVSH_PREFIX~~g" "$ENVSH_OUTPUT"
 
 # Update .env file itself
 # NOTE: This step is not necessary because variables on pages inside the
 # Next.js prod server won't be changed. They're already inlined during the
 # build time.
-for matched_env in ${matched_envs_arr[@]}; do
+for matched_env in "${matched_envs_arr[@]}"; do
   echo $matched_env
 done
 
@@ -145,7 +145,7 @@ for i in "${!matched_envs_arr[@]}"; do
     index="$i"
     echo -e "Got index from inline env: ${index}, replacing ${key}"
     find "$ENVSH_ENV" -type f -exec $ENVSH_SED -i'' \
-      -e "s/$key=.*/${matched_envs_arr[$index]}/g" {} \;
+      -e "s~$key=.*~${matched_envs_arr[$index]}~g" {} \;
   fi
 done
 
