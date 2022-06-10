@@ -1,13 +1,13 @@
 # env.sh
 
-Dead-simple .env file reader and generator
+Dead-simple `.env` file reader and generator
 
 ## Features
 
 - Designed to be used for Next.js app inside a Docker container (General React app should also work)
 - Read env file and generate `__env.js` file for runtime client use
 - Merge current environment variables passing to it (Useful for Docker images)
-- No dependencies (More like a lite version of [react-env](https://github.com/andrewmclagan/react-env)). This is important to keep our container image as small as possible.
+- No dependencies (More like a lite version of [react-env](https://github.com/andrewmclagan/react-env)). But does not require you to build your project inside the container. The benefit of this method can help you avoid multistage Dockerfile. You can build your Next.js project in GitHub Actions. And only `COPY` built files required for production. With this method your image can be much smaller.
 
 ## Usage
 
@@ -156,6 +156,10 @@ Default: `./public/__env.js`
 Debug level output.
 
 Default: `false`
+
+## Security Alert
+
+This script is used to read environment variables from a file and inject matched variables for client-side use. So It's not safe to prepend your private API keys or tokens with `ENVSH_PREFIX`. If you do that these variables will be available in `ENVSH_OUTPUT` file and exposed to the clients.
 
 ## License
 
