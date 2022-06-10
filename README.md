@@ -73,6 +73,60 @@ import { env } from 'utils';
 const API_BASE = env('CUSTOM_API_BASE');
 ```
 
+## Options
+
+### `ENVSH_ENV`
+
+Specify env file to read.
+
+Default: `./.env`
+
+### `ENVSH_PREFIX`
+
+Only environment variables with this prefix will be matched.
+
+Default: `NEXT_PUBLIC_`
+
+### `ENVSH_PREFIX_STRIP`
+
+If set to `true`, `ENVSH_PREFIX` will be stripped from the variable name:
+
+```js
+window.__env = {
+API: "https://openbayes.com/",
+DEBUG: "true",
+}
+```
+
+When set to `false`:
+
+```js
+window.__env = {
+NEXT_PUBLIC_API: "https://openbayes.com/",
+NEXT_PUBLIC_DEBUG: "true",
+}
+```
+
+Default: `true`
+
+### `ENVSH_PREPEND`
+
+String to be prepended to the output config name
+
+Default: `window.__env = {`
+
+### `ENVSH_APPEND`
+
+String to be appended to the output config name
+
+Default: `}`
+
+### `ENVSH_OUTPUT`
+
+The filename of the output config file.
+
+Default: `./public/__env.js`
+
 ## License
 
 Apache-2.0
