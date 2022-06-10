@@ -135,13 +135,13 @@ Default: `true`
 
 ### `ENVSH_PREPEND`
 
-String to be prepended to the output config name
+String to be prepended to the output config name. If you change this, you should also change the way to access it in `utils.js`.
 
 Default: `window.__env = {`
 
 ### `ENVSH_APPEND`
 
-String to be appended to the output config name
+String to be appended to the output config name.
 
 Default: `}`
 
@@ -150,6 +150,12 @@ Default: `}`
 The filename of the output config file.
 
 Default: `./public/__env.js`
+
+### `ENVSH_VERBOSE`
+
+Debug level output.
+
+Default: `false`
 
 ## License
 
