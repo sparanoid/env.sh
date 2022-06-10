@@ -11,6 +11,8 @@ Dead-simple .env file reader and generator
 
 ## Usage
 
+Simple copy `env.sh` to the root of your project. And follow the steps.
+
 General usage:
 
 ```shell
@@ -35,17 +37,13 @@ Change script options:
 $ ENVSH_ENV="./.env.staging" ENVSH_OUTPUT="./public/config.js" ./env.sh
 ```
 
-Use it inside Dockerfile:
+Use it with your existing project. Modify your scripts in `package.json`:
 
-Install `bash` for your image first (Here operator used in this script does not work with `sh` at the moment. This can be changed in the furture):
-
-```dockerfile
-RUN apk add --no-cache bash
-```
-
-```dockerfile
-RUN chmod +x ./env.sh
-ENTRYPOINT ["./env.sh"]
+```json
+"scripts": {
+  "dev": "bash env.sh next dev",
+  "build": "CI=true bash env.sh next build",
+}
 ```
 
 Create a `utils.js` to use it in runtime client:
@@ -66,11 +64,37 @@ export function env(key = '') {
 }
 ```
 
+In `_document.js`:
+
+```js
+<Head>
+  <script src="/__env.js" />
+</Head>
+```
+
 In `MyComponent.js`:
 
 ```js
 import { env } from 'utils';
 const API_BASE = env('CUSTOM_API_BASE');
+```
+
+Now you can run `yarn dev` and see `API_BASE` dynamically injected to your app for client-side rendering.
+
+Use it inside `Dockerfile`:
+
+Install `bash` for your image first (Here operator used in this script does not work with `sh` at the moment. This can be improved in the furture):
+
+```dockerfile
+RUN apk add --no-cache bash
+
+# ...other build steps
+
+RUN chmod +x ./env.sh
+ENTRYPOINT ["./env.sh"]
+
+# ...custom next.js server if required
+CMD ["node", "server.js"]
 ```
 
 ## Options
