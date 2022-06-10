@@ -35,7 +35,7 @@
 # Debug:
 # NEXT_PUBLIC_OB_ENV=123_from_fish NEXT_BAD_ENV=zzz NEXT_PUBLIC_OB_TESTNEW=testenv NEXT_PUBLIC_CODE_UPLOAD_SIZE_LIMIT=6666 ./env.sh
 
-echo -e "env.sh loaded\n"
+echo -e "env.sh loaded"
 
 # Config
 ENVSH_ENV="${ENVSH_ENV:-"./.env"}"
@@ -100,7 +100,7 @@ touch "$ENVSH_OUTPUT"
 # Create an array from inline variables
 matched_envs=$(env | grep ${ENVSH_PREFIX})
 IFS=$'\n' read -r -d '' -a matched_envs_arr <<< "$matched_envs"
-echo -e "\nMatched inline env:\n"
+__info "Matched inline env:"
 for matched_env in "${matched_envs_arr[@]}"; do
   echo $matched_env
 done
@@ -112,7 +112,7 @@ echo "$ENVSH_PREPEND" >> "$ENVSH_OUTPUT"
 [[ -f "$ENVSH_ENV" ]] || { echo "$ENVSH_ENV does not exist" ; exit 1 ;}
 
 # Process .env for runtime client use
-__info "$(__green "Parsing ${ENVSH_ENV}...\n")"
+__info "$(__green "Reading ${ENVSH_ENV}...")"
 while IFS= read -r line
 do
   # Check if this line is a valid environment variable and matches our prefix
@@ -143,20 +143,20 @@ for i in "${!matched_envs_arr[@]}"; do
 
   if [[ "${matched_envs_arr[$i]}" = *"${key}"* ]]; then
     index="$i"
-    echo -e "Got index from inline env: ${index}, replacing ${key}"
+    __info "Got index from inline env: ${index}, replacing ${key}"
     find "$ENVSH_ENV" -type f -exec $ENVSH_SED -i'' \
       -e "s~$key=.*~${matched_envs_arr[$index]}~g" {} \;
   fi
 done
 
 # Print result
-__debug "$(__green "\nDone! Final result in ${ENVSH_OUTPUT}:\n")"
+__debug "$(__green "Done! Final result in ${ENVSH_OUTPUT}:")"
 __debug "`cat "$ENVSH_OUTPUT"`"
 
-__debug "$(__green "\nDone! Modified ${ENVSH_ENV}:\n")"
+__debug "$(__green "Done! Modified ${ENVSH_ENV}:")"
 __debug "`cat "$ENVSH_ENV"`"
 
-__info "$(__green "\nenv.sh done\n")"
+__info "$(__green "env.sh done\n")"
 
 # Accepting commands (for Docker)
 exec "$@"
