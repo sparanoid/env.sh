@@ -78,7 +78,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   if command -v gsed >/dev/null 2>&1 ; then
     __info "$(__green "Found"): $(gsed --version | head -n 1)"
   else
-    __info "gsed not found, trying to install..."
+    __info "gsed not found, trying to install from homebrew..."
 
     if command -v brew >/dev/null 2>&1 ; then
       __info "$(__green "Found"): $(brew --version | head -n 1)"
@@ -98,7 +98,7 @@ rm -f "$ENVSH_OUTPUT"
 touch "$ENVSH_OUTPUT"
 
 # Create an array from inline variables
-matched_envs=$(env | grep ${ENVSH_PREFIX})
+matched_envs=$(env | grep "^${ENVSH_PREFIX}")
 IFS=$'\n' read -r -d '' -a matched_envs_arr <<< "$matched_envs"
 __info "Matched inline env:"
 for matched_env in "${matched_envs_arr[@]}"; do
@@ -116,7 +116,7 @@ __info "$(__green "Reading ${ENVSH_ENV}...")"
 while IFS= read -r line
 do
   # Check if this line is a valid environment variable and matches our prefix
-  if printf '%s' "$line" | grep -e "=" | grep -e "$ENVSH_PREFIX"; then
+  if printf '%s' "$line" | grep -e "=" | grep -e "^$ENVSH_PREFIX"; then
 
     # Read and apply environment variable if exists
     # NOTE: <<< here operator not working with `sh`
@@ -143,7 +143,7 @@ for i in "${!matched_envs_arr[@]}"; do
 
   if [[ "${matched_envs_arr[$i]}" = *"${key}"* ]]; then
     index="$i"
-    __info "Got index from inline env: ${index}, replacing ${key}"
+    __info "Got index ${index} from inline env: ${key}"
     find "$ENVSH_ENV" -type f -exec $ENVSH_SED -i'' \
       -e "s~$key=.*~${matched_envs_arr[$index]}~g" {} \;
   fi
