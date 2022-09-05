@@ -11,7 +11,7 @@ Dead-simple `.env` file reader and generator
 
 ## Usage
 
-Simple copy `env.sh` to the root of your project. And follow the steps.
+Simply copy `env.sh` to the root of your project. And follow the steps.
 
 General usage:
 
